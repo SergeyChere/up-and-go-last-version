@@ -8,6 +8,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.*;
 
+import static com.coffeeshop.model.customer.web.productList.SortStatus.PRICE;
+
 @Repository
 public class ProductSearchRepositoryCustomImpl implements ProductSearchRepositoryCustom {
 
@@ -17,19 +19,13 @@ public class ProductSearchRepositoryCustomImpl implements ProductSearchRepositor
     @Override
     public ProductListDTOResponse searchProductByName(ProductListDTORequest productListDTORequest) {
         if (isEmpty(productListDTORequest)) {
-            TypedQuery<Object[]> jpaQuery = entityManager.createQuery(createQuery(), Object[].class);
+            TypedQuery<Object[]> jpaQuery = entityManager.createQuery(getQuery(), Object[].class);
             setPageAndMaxResult(productListDTORequest, jpaQuery);
             List<Object[]> responsesFromDB = jpaQuery.getResultList();
             return convertResult(responsesFromDB);
         }
-        TypedQuery<Object[]> jpaQuery = entityManager.createQuery(createQuery(), Object[].class);
+        TypedQuery<Object[]> jpaQuery = createTypedQuery(productListDTORequest);
         setPageAndMaxResult(productListDTORequest, jpaQuery);
-
-        Map<String, Object> parameters = setParameters(productListDTORequest);
-        for (Map.Entry<String, Object> map : parameters.entrySet()) {
-            jpaQuery.setParameter(map.getKey(), map.getValue());
-        }
-
         List<Object[]> responsesFromDB = jpaQuery.getResultList();
         if (responsesFromDB.isEmpty()) {
             return new ProductListDTOResponse();
@@ -37,15 +33,24 @@ public class ProductSearchRepositoryCustomImpl implements ProductSearchRepositor
         return convertResult(responsesFromDB);
     }
 
-    private boolean isEmpty(ProductListDTORequest productListDTORequest) {
-        if (       productListDTORequest.getSortBy().equals(null)
-                && productListDTORequest.getSearch().equals(null)
-                && productListDTORequest.getPriceMin().equals(null)
-                && productListDTORequest.getPriceMax().equals(null)
-                && productListDTORequest.getCharacteristics().equals(null)) {
-            return true;
+    private TypedQuery<Object[]>  createTypedQuery(ProductListDTORequest productListDTORequest) {
+        if(productListDTORequest.getSortBy().equals(null)) {
+            productListDTORequest.setSortBy(PRICE);
         }
-        return false;
+        String query = getQuery(productListDTORequest.getSortBy().toString());
+        TypedQuery<Object[]> jpaQuery = entityManager.createQuery(query, Object[].class);
+
+        Map<String, Object> parameters = setParameters(productListDTORequest);
+        for (Map.Entry<String, Object> map : parameters.entrySet()) {
+            jpaQuery.setParameter(map.getKey(), map.getValue());
+        }
+        return jpaQuery;
+    }
+
+    private boolean isEmpty(ProductListDTORequest productListDTORequest) {
+        return productListDTORequest.getSortBy().equals(null) && productListDTORequest.getSearch().equals(null)
+                && productListDTORequest.getPriceMin().equals(null) && productListDTORequest.getPriceMax().equals(null)
+                && productListDTORequest.getCharacteristics().equals(null);
     }
 
     private ProductListDTOResponse convertResult(List<Object[]> responsesFromDB){
@@ -98,7 +103,7 @@ public class ProductSearchRepositoryCustomImpl implements ProductSearchRepositor
         return parameters;
     }
 
-    private String createQuery() {
+    private String getQuery(String sortBy) {
         StringBuilder query = new StringBuilder();
         query.append("select p.id, p.productName, p.shortDescription, p.productCategoryId, p.previewImage, p.unitPrice, ");
         query.append("pc.bitter, pc.sour, pc.strong, pc.decaf, ");
@@ -114,6 +119,19 @@ public class ProductSearchRepositoryCustomImpl implements ProductSearchRepositor
         query.append("and pc.strong between :strongFrom and :strongTo ");
         query.append("and pc.decaf = :decaf ");
         query.append("and pc.ground = :ground");
+        query.append(" order by");
+        query.append(sortBy);
+        return query.toString();
+    }
+
+    private String getQuery() {
+        StringBuilder query = new StringBuilder();
+        query.append("select ");
+        query.append("pc.product.id, p.productName, p.shortDescription, p.productCategory, p.unitPrice, p.previewImage, pq.quantity,");
+        query.append(" pc.strong, pc.sour, pc.bitter, pc.decaf, pc.ground");
+        query.append(" from Product p ");
+        query.append(" join ProductCoffee pc on p.id=pc.product.id");
+        query.append(" join ProductQuantity pq on pc.product.id=pq.product.id ");
         return query.toString();
     }
 }
