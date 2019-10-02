@@ -15,18 +15,22 @@ public class ProductListDTORequest {
     @ApiModelProperty(example = "1")
     @Min(1)
     private Integer page;
+
     @ApiModelProperty(example = "10")
     @Min(1)
     private Integer results;
+
     @ApiModelProperty(example = "Jamaican Arabica")
     private String search;
+
     @ApiModelProperty(example = "10")
     private Double priceMin;
+
     @ApiModelProperty(example = "100")
     private Double priceMax;
 
-    @ApiModelProperty(example = "popular | price | name")
-    private String sortBy;
+    @ApiModelProperty(example = "PRICE")
+    private SortStatus sortBy;
 
     @Valid
     ProductCharacteristicsDTORequest characteristics;
