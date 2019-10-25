@@ -1,6 +1,7 @@
 package com.coffeeshop.service.admin.productItem;
 
 import com.coffeeshop.exception.ProductException;
+import com.coffeeshop.exception.ProductExceptionType;
 import com.coffeeshop.exception.ProductNotFoundException;
 import com.coffeeshop.model.admin.request.ProductItemRequest;
 import com.coffeeshop.model.admin.response.ProductItemResponse;
@@ -110,7 +111,7 @@ public class ProductItemServiceImpl implements ProductItemService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public List<ProductItem> findAndMarkAsSold(Product product, Integer amount) {
         if (amount < 0) {
             throw new ProductException(product.getId(), ILLEGAL_QUANTITY);
