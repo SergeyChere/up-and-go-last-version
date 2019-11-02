@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import springfox.documentation.spi.DocumentationType;
@@ -22,10 +23,14 @@ import java.util.stream.Collectors;
 
 @Component
 @Order(SwaggerPluginSupport.SWAGGER_PLUGIN_ORDER + 1)
+@Profile("dev")
 public class SwaggerApiModelPropertyImageFileDataType implements ModelPropertyBuilderPlugin {
     private static final String FILE_ARRAY_PREFIX = "[";
     private static final String FILE_ARRAY_SUFFIX = "]";
     private static final String FILE_ARRAY_DELIMITER = ",";
+
+    @Autowired
+    private ApiModelPropertyPropertyBuilder apiModelPropertyPropertyBuilder;
 
     private static final Map<String, UnaryOperator<String>> FILE_TRANSFORMATIONS_PATTERN = new HashMap<String, UnaryOperator<String>>() {{
         put("file", SwaggerApiModelPropertyImageFileDataType::getBase64FromSingleFile);
@@ -67,8 +72,7 @@ public class SwaggerApiModelPropertyImageFileDataType implements ModelPropertyBu
                 .collect(Collectors.joining(FILE_ARRAY_DELIMITER, FILE_ARRAY_PREFIX, FILE_ARRAY_SUFFIX));
     }
 
-    @Autowired
-    private ApiModelPropertyPropertyBuilder apiModelPropertyPropertyBuilder;
+
 
     @Override
     @SneakyThrows

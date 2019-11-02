@@ -1,7 +1,7 @@
-package com.coffeeshop.validation.imageType;
+package com.coffeeshop.validation;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import org.apache.tika.Tika;
 
 import javax.validation.ConstraintValidator;
@@ -24,18 +24,38 @@ public class Base64TypeValidator implements ConstraintValidator<Base64Type, Stri
         if (base64Type.isEmpty()) {
             return false;
         }
-        if (checkType(base64Type)) {
-            return true;
-        }
-        return false;
+        return isSupportedImageType(base64Type);
     }
 
-    private boolean checkType(String base64Type) {
+    private boolean isSupportedImageType(String base64Type) {
         byte[] imageByteArray = Base64.getDecoder().decode(base64Type);
         String contentType = new Tika().detect(imageByteArray);
 
-        return (contentType.contains("JPEG") || contentType.contains("jpeg")
-            ||  contentType.contains("JPG") || contentType.contains("jpg")
-            ||  contentType.contains("JFIF") ||  contentType.contains("jfif"));
+        return ImageType.getByType(contentType) != null;
     }
+
+    @AllArgsConstructor
+    @Getter
+    enum ImageType {
+        JPEG("jpeg"),
+        JGP("jpg"),
+        JFIF("jfif");
+
+        private String type;
+
+        public static ImageType getByType(String inputType) {
+            if (inputType == null) {
+                return null;
+            }
+
+            return Arrays.stream(values())
+                    .filter(x -> inputType.toLowerCase().contains(x.getType()))
+                    .findFirst()
+                    .orElse(null);
+        }
+
+    }
+
 }
+
+

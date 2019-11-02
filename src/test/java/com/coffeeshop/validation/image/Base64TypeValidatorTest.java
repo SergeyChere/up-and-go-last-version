@@ -1,10 +1,10 @@
-package com.coffeeshop.validation.imageType;
+package com.coffeeshop.validation.image;
 
+import com.coffeeshop.validation.Base64TypeValidator;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Base64;
 
@@ -13,19 +13,18 @@ import static org.junit.Assert.assertTrue;
 
 public class Base64TypeValidatorTest {
 
-    private static final String COFFEE_IMAGE_TEST_PNG = "src/test/java/resources/imagetype/small_png_33KB.png";
-    private static final String COFFEE_IMAGE_TEST_GIF = "src/test/java/resources/imagetype/available_size_gif_224KB.gif";
-    private static final String COFFEE_IMAGE_TEST_PDF = "src/test/java/resources/imagetype/small_pdf_8KB.pdf";
-    private static final String COFFEE_IMAGE_TEST_JPG = "src/test/java/resources/imagetype/small_jpg_8KB.jpg";
-    private static final String COFFEE_IMAGE_TEST_ZIP = "src/test/java/resources/imagetype/small_zip_7KB.zip";
-    private static final String COFFEE_IMAGE_TEST_JPEG = "src/test/java/resources/imagetype/big_jpeg_416KB.jpeg";
+    private static final String COFFEE_IMAGE_TEST_PNG = "/image-type/small_png_33KB.png";
+    private static final String COFFEE_IMAGE_TEST_GIF = "/image-type/available_size_gif_224KB.gif";
+    private static final String COFFEE_IMAGE_TEST_PDF = "/image-type/small_pdf_8KB.pdf";
+    private static final String COFFEE_IMAGE_TEST_JPG = "/image-type/small_jpg_8KB.jpg";
+    private static final String COFFEE_IMAGE_TEST_ZIP = "/image-type/small_zip_7KB.zip";
+    private static final String COFFEE_IMAGE_TEST_JPEG = "/image-type/big_jpeg_416KB.jpeg";
 
-    Base64TypeValidator validator = new Base64TypeValidator();
+    private Base64TypeValidator validator = new Base64TypeValidator();
 
     @Test
     public void testValidNullBase64ImageTypePositive() {
-        String imageNull = null;
-        assertTrue(validator.isValid(imageNull,null));
+        assertTrue(validator.isValid(null,null));
     }
 
     @Test
@@ -56,10 +55,8 @@ public class Base64TypeValidatorTest {
 
     @SneakyThrows()
     private String encoder(String imageSrc){
-        String base64 = "" ;
-        InputStream inputStream = new FileInputStream(imageSrc);
+        InputStream inputStream = Base64TypeValidatorTest.class.getResourceAsStream(imageSrc);
         byte[] imageToBytes = IOUtils.toByteArray(inputStream);
-        base64 = Base64.getEncoder().encodeToString(imageToBytes);
-        return base64;
+        return Base64.getEncoder().encodeToString(imageToBytes);
     }
 }

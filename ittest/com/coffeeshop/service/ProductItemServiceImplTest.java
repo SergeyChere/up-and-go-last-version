@@ -1,13 +1,16 @@
-package com.coffeeshop.service.admin.productItem;
+package com.coffeeshop.service;
 
-import com.coffeeshop.configuration.SpringTestConfiguration;
+import com.coffeeshop.configuration.ItTestDockerMySQLConfiguration;
+import com.palantir.docker.compose.DockerComposeRule;
+import lombok.SneakyThrows;
 import org.junit.Assert;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -15,27 +18,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PreDestroy;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+
+//todo this configuration must run under "docker" spring profile
 @RunWith(SpringRunner.class)
-@Import(SpringTestConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class ProductItemServiceImplTest {
 
     @LocalServerPort
-    int randomServerPort;
+    private int randomServerPort;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private TestRestTemplate restTemplate;
 
-    public static Map<HttpStatus, Integer> counterByStatus;
 
-//    todo part should be replaces with spring test infra and converted to a proper integration test
+    @ClassRule
+    public static DockerComposeRule dockerComposeRule = ItTestDockerMySQLConfiguration.getDockerComposeRule();
+
+    private static Map<HttpStatus, Integer> counterByStatus;
+
 
     public void init(){
         counterByStatus = new ConcurrentHashMap<>();
@@ -76,5 +83,11 @@ public class ProductItemServiceImplTest {
                 counterByStatus.compute(HttpStatus.valueOf(exc.getRawStatusCode()), ((httpStatus, integer) -> integer+1));
             }
         });
+    }
+
+    @PreDestroy
+    @SneakyThrows
+    public void destroy() {
+        dockerComposeRule.dockerCompose().down();
     }
 }

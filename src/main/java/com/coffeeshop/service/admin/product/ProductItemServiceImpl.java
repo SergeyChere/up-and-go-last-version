@@ -1,7 +1,6 @@
-package com.coffeeshop.service.admin.productItem;
+package com.coffeeshop.service.admin.product;
 
 import com.coffeeshop.exception.ProductException;
-import com.coffeeshop.exception.ProductExceptionType;
 import com.coffeeshop.exception.ProductNotFoundException;
 import com.coffeeshop.model.admin.request.ProductItemRequest;
 import com.coffeeshop.model.admin.response.ProductItemResponse;
