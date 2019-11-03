@@ -41,10 +41,10 @@ public class ProductCustomerController {
         if (result.hasErrors()) {
             throw new InputValidationException(result);
         }
-        if (productListDTORequest.getPage() == 0 || productListDTORequest.getPage().equals(null)) {
+        if (productListDTORequest.getPage() == 0 || productListDTORequest.getPage() == null) {
             productListDTORequest.setPage(defaultPageRequest);
         }
-        if (productListDTORequest.getResults().equals(null) || productListDTORequest.getResults() < 1) {
+        if (productListDTORequest.getResults() == null || productListDTORequest.getResults() < 1) {
             productListDTORequest.setResults(defaultResultRequest);
         }
         if (productListDTORequest.getResults() > 20) {

@@ -1,14 +1,15 @@
-package com.coffeeshop.service.admin.productCreation;
+package com.coffeeshop.service.admin.product;
 
 import com.coffeeshop.converter.CommonConverter;
+import com.coffeeshop.converter.productCreationConverter.admin.response.ProductResponseConverter;
 import com.coffeeshop.exception.ProductNotFoundException;
+import com.coffeeshop.model.admin.request.ProductRequest;
+import com.coffeeshop.model.admin.response.ProductCreationResponse;
 import com.coffeeshop.model.admin.response.ProductMainCreationResponse;
 import com.coffeeshop.model.customer.entity.product.product.Product;
 import com.coffeeshop.model.customer.entity.product.productCoffee.ProductCoffee;
-import com.coffeeshop.model.admin.request.ProductRequest;
-import com.coffeeshop.model.admin.response.ProductCreationResponse;
-import com.coffeeshop.repository.product.*;
-import com.coffeeshop.converter.productCreationConverter.admin.response.ProductResponseConverter;
+import com.coffeeshop.repository.product.ProductCoffeeRepository;
+import com.coffeeshop.repository.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

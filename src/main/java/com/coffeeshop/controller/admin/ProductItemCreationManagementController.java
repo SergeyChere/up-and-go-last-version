@@ -4,7 +4,7 @@ import com.coffeeshop.exception.InputValidationException;
 import com.coffeeshop.model.admin.request.ProductItemRequest;
 import com.coffeeshop.model.customer.entity.product.productItem.ProductItem;
 import com.coffeeshop.repository.product.ProductItemRepository;
-import com.coffeeshop.service.admin.productItem.ProductItemService;
+import com.coffeeshop.service.admin.product.ProductItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.validation.BindingResult;

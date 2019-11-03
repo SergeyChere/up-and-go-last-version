@@ -1,4 +1,4 @@
-package com.coffeeshop.validation.imageSize;
+package com.coffeeshop.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

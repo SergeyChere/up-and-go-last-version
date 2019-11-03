@@ -9,8 +9,8 @@ import com.coffeeshop.model.admin.request.ProductRequest;
 import com.coffeeshop.model.customer.entity.product.productImage.ProductImage;
 import com.coffeeshop.repository.product.ProductImageRepository;
 import com.coffeeshop.repository.product.ProductRepository;
-import com.coffeeshop.service.admin.productCreation.ProductCreationService;
-import com.coffeeshop.service.admin.productItem.ProductItemService;
+import com.coffeeshop.service.admin.product.ProductCreationService;
+import com.coffeeshop.service.admin.product.ProductItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -48,13 +48,13 @@ public class FindAndMarkTestRunner implements ApplicationRunner {
         makeAvailable(lenght);
     }
 
-    public void makeAvailable(int lenght) {
+    private void makeAvailable(int lenght) {
         for (int i = 1; i<=lenght; i++) {
             productCreationService.makeAvailable((long) i);
         }
     }
 
-    public void createImages(int number) {
+    private void createImages(int number) {
         String imageString = number+"SGVsbG8sIFdvcmxkIQ==";
         byte[] imageTest = imageString.getBytes();
 
@@ -66,7 +66,7 @@ public class FindAndMarkTestRunner implements ApplicationRunner {
         productImageRepository.save(productImage);
     }
 
-    public void createProductItem(int number) {
+    private void createProductItem(int number) {
         ProductItemRequest productItemRequest = ProductItemRequest.builder()
                 .productId(Long.valueOf(number))
                 .weightKG(number == 1 || number == 4 ? 100 : number == 2 ? 99 : number == 3 ? 5 : number*10)
@@ -74,7 +74,7 @@ public class FindAndMarkTestRunner implements ApplicationRunner {
         productItemService.createProductItem(productItemRequest);
     }
 
-    public void createProduct(int number) {
+    private void createProduct(int number) {
         ProductRequest productRequest =
                 ProductRequest.builder()
                         .productCreationRequest(ProductCreationRequest.builder()
@@ -88,8 +88,6 @@ public class FindAndMarkTestRunner implements ApplicationRunner {
                                 .sour(ThreadLocalRandom.current().nextInt(1, 5))
                                 .bitter(ThreadLocalRandom.current().nextInt(1, 5))
                                 .strong(ThreadLocalRandom.current().nextInt(1, 5))
-//                                .ground(ThreadLocalRandom.current().nextBoolean())
-//                                .decaf(ThreadLocalRandom.current().nextBoolean())
                                 .ground(true)
                                 .decaf(true)
                                 .build()).build();

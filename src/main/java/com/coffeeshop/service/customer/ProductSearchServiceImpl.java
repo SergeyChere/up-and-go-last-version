@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,7 +72,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         return productDetailsDTOResponse;
     }
 
-    public String generateURLforImages(ProductImage productImage) {
+    private String generateURLforImages(ProductImage productImage) {
         Long productId = productImage.getProduct().getId();
         Long imageId = productImage.getId();
         return "http://localhost:8080/api/customer/products/"+productId+"/images/"+imageId;

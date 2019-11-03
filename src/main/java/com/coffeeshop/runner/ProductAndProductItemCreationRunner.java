@@ -5,18 +5,16 @@ import com.coffeeshop.model.admin.request.ProductCoffeeCreation;
 import com.coffeeshop.model.admin.request.ProductCreationRequest;
 import com.coffeeshop.model.admin.request.ProductItemRequest;
 import com.coffeeshop.model.admin.request.ProductRequest;
-import com.coffeeshop.model.customer.entity.product.product.Product;
 import com.coffeeshop.model.customer.entity.product.productImage.ProductImage;
 import com.coffeeshop.repository.product.ProductImageRepository;
 import com.coffeeshop.repository.product.ProductRepository;
-import com.coffeeshop.service.admin.productCreation.ProductCreationService;
-import com.coffeeshop.service.admin.productItem.ProductItemService;
+import com.coffeeshop.service.admin.product.ProductCreationService;
+import com.coffeeshop.service.admin.product.ProductItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
